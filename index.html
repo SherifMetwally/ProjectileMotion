@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+
+        input {
+            width: 250px;
+            padding: 10px;
+        }
+
+        label {
+            padding: 10px;
+
+        }
+
+        button {
+            padding: 10px;
+            margin-top: 20px;
+            ;
+        }
+    </style>
+    <title>Task1</title>
+</head>
+
+<body>
+
+    <canvas id="canvas" width="1900" height="500" style="border:1px solid #000000;"> </canvas>
+    <div class="input-group">
+        <label for="speed"> Speed </label>
+        <input type="number" id="speed">
+        <label for="angle"> Angle </label>
+        <input type="number" id="angle">
+        <div>
+            <button type="button" id="startButton" onclick="start()">Start</button>
+            <button type="button" id="resetButton" onclick="reset()">reset</button>
+        </div>
+        <div>
+            <h3> X : <span id="xPosition"> </span> </h3>
+            <h3> Y : <span id="yPosition"> </span> </h3>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        // Generate Random Color
+        function generateRandomColor() {
+            let randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+            return randomColor;
+        }
+
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let intervalSpeed = 10
+        let start = () => {
+            let color = generateRandomColor()
+            veloctiy = document.getElementById('speed').value;
+            if (veloctiy == '') {
+                alert("Please Insert velocity value")
+                return;
+            }
+            theta = document.getElementById('angle').value;
+            if (theta == '') {
+                alert("Please Insert angle value")
+                return;
+            }
+            document.getElementById('resetButton').setAttribute('disabled', true)
+            let x = 10;
+            let y = 480;
+            const startX = x;
+            const startY = y;
+            let r = 15;
+            let gravity = 9.8;
+            let frame = 0;
+            let velocityX = veloctiy * Math.cos(theta * Math.PI / 180);
+            let velocityY = veloctiy * Math.sin(theta * Math.PI / 180);
+            const interval = setInterval(function () {
+                if (y < canvas.height - r && x < canvas.width - r) {
+                    y = startY - (velocityY * frame - (1 / 2 * gravity * Math.pow(frame, 2)));
+                    x = startX + velocityX * frame;
+                }
+                else {
+                    clearInterval(interval);
+                    document.getElementById('resetButton').removeAttribute('disabled')
+                    document.getElementById('xPosition').innerText = x
+                    document.getElementById('yPosition').innerText = y
+                }
+                ctx.save();
+                ctx.beginPath();
+                ctx.fillStyle = color
+                ctx.arc(x, y, r, 0, Math.PI * 2, true);
+                ctx.fill();
+                ctx.restore();
+                ctx.strokeStyle = 'white';
+                ctx.stroke();
+                frame += 1 / 10;
+
+            }, intervalSpeed);
+        }
+
+        let reset = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+    </script>
+
+</body>
+
+</html>
